@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'login.dart';
+import 'product.dart';
+import 'products_repository.dart';
 
 // ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
@@ -20,18 +23,8 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Color(0xff090310),
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back_ios),
         elevation: 0,
         backgroundColor: Colors.green,
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-          )
-        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -83,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: ListView(
+      body: Column(
         children: [
           Padding(
             padding: EdgeInsets.all(20.0),
@@ -98,6 +91,54 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
+          ),
+          StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('addToCart')
+                .doc(FirebaseAuth.instance.currentUser.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              List<dynamic> ids = snapshot.data['saved'];
+              List<Product> products =
+                  ProductsRepository.loadProducts(Category.all);
+
+              return Container(
+                height: 600.0,
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0.0),
+                  scrollDirection: Axis.vertical,
+                  children: ids
+                      .map(
+                        (e) => Container(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: OutlinedButton(
+                              child: Padding(
+                                padding: EdgeInsets.all(15.0),
+                                child: Text(
+                                  products[e].name,
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.teal,
+                                side: BorderSide(color: Colors.red, width: 5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              );
+            },
           ),
           logoutButton(),
         ],
