@@ -150,130 +150,128 @@ class _BoardPageState extends State<BoardPage> {
           ),
         ],
       ),
-      body: new Stack(
-        children: <Widget>[
-          new Transform.translate(
-            offset:
-                new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: products.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.data == null)
-                  return Center(child: CircularProgressIndicator());
-                return ListView(
-                  // shrinkWrap: true,
-                  // padding: const EdgeInsets.all(0.0),
-                  // scrollDirection: Axis.vertical,
-                  // primary: true,
-                  children: [
-                    ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(0.0),
-                      scrollDirection: Axis.vertical,
-                      primary: true,
-                      children:
-                          snapshot.data.docs.map((DocumentSnapshot document) {
-                        return FutureBuilder(
-                          future: downloadURL(document.data()['filePath']),
-                          builder:
-                              (BuildContext context, AsyncSnapshot<String> s) {
-                            switch (s.connectionState) {
-                              case ConnectionState.none:
-                              case ConnectionState.waiting:
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              default:
-                                return s.hasData
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DetailBoardPage(),
-                                              settings: RouteSettings(
-                                                arguments:
-                                                    document.data()['docId'],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: AwesomeListItem(
-                                          title: document.data()['이름'],
-                                          price: document.data()['가격'],
-                                          color:
-                                              COLORS[new Random().nextInt(5)],
-                                          image: s.data.toString(),
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                new Transform.translate(
+                  offset:
+                  new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: products.snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.data == null)
+                        return Center(child: CircularProgressIndicator());
+                      return ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(0.0),
+                        scrollDirection: Axis.vertical,
+                        primary: true,
+                        children:
+                        snapshot.data.docs.map((DocumentSnapshot document) {
+                          return FutureBuilder(
+                            future: downloadURL(document.data()['filePath']),
+                            builder:
+                                (BuildContext context, AsyncSnapshot<String> s) {
+                              switch (s.connectionState) {
+                                case ConnectionState.none:
+                                case ConnectionState.waiting:
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                default:
+                                  return s.hasData
+                                      ? GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailBoardPage(),
+                                          settings: RouteSettings(
+                                            arguments:
+                                            document.data()['docId'],
+                                          ),
                                         ),
-                                      )
-                                    : Center(
-                                        child: CircularProgressIndicator(),
                                       );
-                            }
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    SizedBox(height: 30.0),
-                  ],
-                );
-              },
-            ),
-          ),
-          new Transform.translate(
-            offset: Offset(0.0, -56.0),
-            child: new Container(
-              child: new ClipPath(
-                clipper: new MyClipper(),
-                child: new Stack(
-                  children: [
-                    new Image.network(
-                      "https://picsum.photos/800/400?random",
-                      fit: BoxFit.cover,
-                    ),
-                    new Opacity(
-                      opacity: 0.2,
-                      child: new Container(color: COLORS[0]),
-                    ),
-                    new Transform.translate(
-                      offset: Offset(0.0, 50.0),
-                      child: new ListTile(
-                        leading: new CircleAvatar(
-                          child: new Container(
-                            decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.transparent,
-                              image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image: NetworkImage(
-                                    "https://cdn.imweb.me/thumbnail/20201209/72087a59e649e.jpg"),
+                                    },
+                                    child: AwesomeListItem(
+                                      title: document.data()['이름'],
+                                      price: document.data()['가격'],
+                                      color:
+                                      COLORS[new Random().nextInt(5)],
+                                      image: s.data.toString(),
+                                    ),
+                                  )
+                                      : Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                              }
+                            },
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                ),
+                new Transform.translate(
+                  offset: Offset(0.0, -56.0),
+                  child: new Container(
+                    child: new ClipPath(
+                      clipper: new MyClipper(),
+                      child: new Stack(
+                        children: [
+                          new Image.network(
+                            "https://picsum.photos/800/400?random",
+                            fit: BoxFit.cover,
+                          ),
+                          new Opacity(
+                            opacity: 0.2,
+                            child: new Container(color: COLORS[0]),
+                          ),
+                          new Transform.translate(
+                            offset: Offset(0.0, 50.0),
+                            child: new ListTile(
+                              leading: new CircleAvatar(
+                                child: new Container(
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.transparent,
+                                    image: new DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: NetworkImage(
+                                          "https://cdn.imweb.me/thumbnail/20201209/72087a59e649e.jpg"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              title: new Text(
+                                "반려식물입양처",
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24.0,
+                                    letterSpacing: 2.0),
+                              ),
+                              subtitle: new Text(
+                                "주변의 이웃과 반려식물의 기쁨을 나누세요",
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                    letterSpacing: 2.0),
                               ),
                             ),
                           ),
-                        ),
-                        title: new Text(
-                          "반려식물입양처",
-                          style: new TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.0,
-                              letterSpacing: 2.0),
-                        ),
-                        subtitle: new Text(
-                          "주변의 이웃과 반려식물의 기쁨을 나누세요",
-                          style: new TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0,
-                              letterSpacing: 2.0),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                )
+              ],
             ),
-          )
+          ),
+          SizedBox(height: 90.0),
         ],
       ),
     );
