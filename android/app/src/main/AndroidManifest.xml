@@ -3,6 +3,10 @@
    <application
         android:label="treeplanet"
         android:icon="@mipmap/ic_launcher">
+
+       #new
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyDqbGWqtnwRtNHy4uBCLdvh16dI_7JxPtI"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -37,5 +41,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+       #new
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyDqbGWqtnwRtNHy4uBCLdvh16dI_7JxPtI"/>
     </application>
 </manifest>

@@ -4,7 +4,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
+import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:intl/intl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:treeplanet/board.dart';
 
 Future<void> uploadFile(String _path, String filePath) async {
@@ -25,6 +29,14 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+  LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
+  GoogleMapController _controller;
+  LocationData _currentPosition;
+  String _address,_dateTime;
+  GoogleMapController mapController;
+  Location _location = Location();
+
+
   final _controllerName = TextEditingController();
   final _controllerPrice = TextEditingController();
   final _controllerDescription = TextEditingController();
@@ -35,6 +47,26 @@ class _AddPageState extends State<AddPage> {
   String _path;
 
   String docId;
+
+  void _onMapCreated(GoogleMapController _cntlr) {
+    _controller = _cntlr;
+    _location.onLocationChanged.listen((l) {
+      _controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
+        ),
+      );
+      final marker = Marker(
+        position: LatLng(l.latitude, l.longitude),
+        infoWindow: InfoWindow(
+          title: '판매자 위치',
+        ),
+      );
+
+    });
+  }
+
+
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -70,6 +102,15 @@ class _AddPageState extends State<AddPage> {
     });
 
     return future;
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLoc();
+
   }
 
   @override
@@ -161,6 +202,51 @@ class _AddPageState extends State<AddPage> {
               },
             ),
           ),
+          SafeArea(
+            child: Container(
+              child: Center(
+                child: Column(
+                children: [Container(
+                height:  MediaQuery.of(context).size.height/2.5,
+                width: MediaQuery.of(context).size.width,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(target: _initialcameraposition,
+                      zoom: 15),
+                  mapType: MapType.normal,
+                  onMapCreated: _onMapCreated,
+                  myLocationEnabled: true,
+                ),
+              ),
+              SizedBox(
+                height: 3,
+              ),
+              if (_dateTime != null)
+                Text(
+                  "Date/Time: $_dateTime",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+              SizedBox(
+                height: 3,
+              ),
+              if (_address != null)
+                Text(
+                  "Address: $_address",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              SizedBox(
+                height: 3,
+              ),
+    ],
+          ),
+          ),),
+    ),
+
           Container(
             margin: EdgeInsets.only(left: 50, right: 50),
             child: TextFormField(
@@ -244,5 +330,50 @@ class _AddPageState extends State<AddPage> {
         ],
       ),
     );
+  }
+  getLoc() async{
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await _location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await _location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _currentPosition = await _location.getLocation();
+    _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
+    _location.onLocationChanged.listen((LocationData currentLocation) {
+      print('${currentLocation.longitude} : ${currentLocation.longitude}');
+      setState(() {
+        _currentPosition = currentLocation;
+        _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
+
+        DateTime now = DateTime.now();
+        _dateTime = DateFormat('EEE d MMM kk:mm:ss ').format(now);
+        getPlaceAddress(_currentPosition.latitude, _currentPosition.longitude)
+            .then((value) {
+          setState(() {
+            _address = '${value.first.addressLine}';
+          });
+        });
+      });
+    });
+  }
+  Future<List<Address>> getPlaceAddress(double lat, double lng) async{
+    final coordinates = new Coordinates(lat, lng);
+    List<Address> add = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    return add;
+
   }
 }
