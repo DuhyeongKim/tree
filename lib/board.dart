@@ -162,49 +162,62 @@ class _BoardPageState extends State<BoardPage> {
                 if (snapshot.data == null)
                   return Center(child: CircularProgressIndicator());
                 return ListView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(0.0),
-                  scrollDirection: Axis.vertical,
-                  primary: true,
-                  children: snapshot.data.docs.map((DocumentSnapshot document) {
-                    return FutureBuilder(
-                      future: downloadURL(document.data()['filePath']),
-                      builder: (BuildContext context, AsyncSnapshot<String> s) {
-                        switch (s.connectionState) {
-                          case ConnectionState.none:
-                          case ConnectionState.waiting:
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          default:
-                            return snapshot.hasData
-                                ? GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailBoardPage(),
-                                          settings: RouteSettings(
-                                            arguments: document.data()['docId'],
-                                          ),
+                  // shrinkWrap: true,
+                  // padding: const EdgeInsets.all(0.0),
+                  // scrollDirection: Axis.vertical,
+                  // primary: true,
+                  children: [
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(0.0),
+                      scrollDirection: Axis.vertical,
+                      primary: true,
+                      children:
+                          snapshot.data.docs.map((DocumentSnapshot document) {
+                        return FutureBuilder(
+                          future: downloadURL(document.data()['filePath']),
+                          builder:
+                              (BuildContext context, AsyncSnapshot<String> s) {
+                            switch (s.connectionState) {
+                              case ConnectionState.none:
+                              case ConnectionState.waiting:
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              default:
+                                return s.hasData
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailBoardPage(),
+                                              settings: RouteSettings(
+                                                arguments:
+                                                    document.data()['docId'],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: AwesomeListItem(
+                                          title: document.data()['이름'],
+                                          price: document.data()['가격'],
+                                          color:
+                                              COLORS[new Random().nextInt(5)],
+                                          image: s.data.toString(),
                                         ),
+                                      )
+                                    : Center(
+                                        child: CircularProgressIndicator(),
                                       );
-                                    },
-                                    child: AwesomeListItem(
-                                      title: document.data()['이름'],
-                                      price: document.data()['가격'],
-                                      color: COLORS[new Random().nextInt(5)],
-                                      image: s.data.toString(),
-                                    ),
-                                  )
-                                : Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                        }
-                      },
-                    );
-                  }).toList(),
+                            }
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 30.0),
+                  ],
                 );
               },
             ),
