@@ -442,20 +442,26 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                       ),
                     ),
                     SizedBox(height: 50),
-                    FloatingActionButton.extended(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DirectMessage(),
-                            settings: RouteSettings(
-                              arguments: docId,
-                            ),
-                          ),
-                        );
-                      },
-                      label: Text('DM'),
-                    ),
+                    FutureBuilder<DocumentSnapshot>(
+                        future: p.get(),
+                        builder: (context, snapshot) {
+                          return FloatingActionButton.extended(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DirectMessage(),
+                                  settings: RouteSettings(
+                                    arguments: snapshot.data['userId'] +
+                                        "_" +
+                                        FirebaseAuth.instance.currentUser.uid,
+                                  ),
+                                ),
+                              );
+                            },
+                            label: Text('DM'),
+                          );
+                        }),
                     SizedBox(height: 50),
                   ],
                 ),

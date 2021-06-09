@@ -13,37 +13,21 @@ class _DirectMessageState extends State<DirectMessage> {
   @override
   Widget build(BuildContext context) {
     final String docId = ModalRoute.of(context).settings.arguments;
-    CollectionReference m = FirebaseFirestore.instance
+    Query m = FirebaseFirestore.instance
         .collection('chatRoom')
         .doc(docId)
-        .collection('chats');
+        .collection('chats')
+        .orderBy("creationDate", descending: false);
     final _formKey = GlobalKey<FormState>(debugLabel: '_DirectMessageState');
     final _controller = TextEditingController();
-    String sellerId;
 
-    // Future<DocumentReference> getSellerId() async {
-    //   CollectionReference dm =
-    //       FirebaseFirestore.instance.collection('chatRoom');
-    //
-    //   await p.get().then((DocumentSnapshot ds) {
-    //     // if (ds.id == )
-    //     // sellerId = ds.data()['sellerId'];
-    //     // print(sellerId);
-    //     // print(ds.data()['sellerId']);
-    //   });
-    //
-    //   return dm.doc(sellerId + "_" + FirebaseAuth.instance.currentUser.uid);
-    // }
-
-    Future<String> sendToSeller(String content) {
-      DocumentReference dm = FirebaseFirestore.instance
-          .collection('chatRoom')
-          .doc(sellerId + "_" + FirebaseAuth.instance.currentUser.uid);
+    Future<String> sendMessage(String content) {
+      DocumentReference dm =
+          FirebaseFirestore.instance.collection('chatRoom').doc(docId);
 
       dm.set({
-        'sellerId': sellerId,
+        'sellerId': docId.split("_")[0],
         'purchaserId': FirebaseAuth.instance.currentUser.uid,
-        'productId': docId,
       });
 
       final future = dm.collection('chats').add({
@@ -70,6 +54,9 @@ class _DirectMessageState extends State<DirectMessage> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.data == null)
             return ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(0.0),
+              scrollDirection: Axis.vertical,
               children: [
                 SizedBox(height: 150.0),
                 Padding(
@@ -96,7 +83,7 @@ class _DirectMessageState extends State<DirectMessage> {
                         StyledButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              await sendToSeller(_controller.text);
+                              await sendMessage(_controller.text);
                               _controller.clear();
                             }
                           },
@@ -116,12 +103,29 @@ class _DirectMessageState extends State<DirectMessage> {
             );
           else {
             return ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(0.0),
+              scrollDirection: Axis.vertical,
               children: [
                 ListView(
-                  children: snapshot.data.docs
-                      .map((DocumentSnapshot document) {
-                  })
-                      .toList(),
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0.0),
+                  scrollDirection: Axis.vertical,
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
+                    return Align(
+                      alignment: document.data()['userId'] ==
+                              FirebaseAuth.instance.currentUser.uid
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          document.data()['content'],
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -147,7 +151,7 @@ class _DirectMessageState extends State<DirectMessage> {
                         StyledButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              await sendToSeller(_controller.text);
+                              await sendMessage(_controller.text);
                               _controller.clear();
                             }
                           },
