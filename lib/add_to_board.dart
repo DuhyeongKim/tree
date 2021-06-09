@@ -36,7 +36,6 @@ class _AddPageState extends State<AddPage> {
   GoogleMapController mapController;
   Location _location = Location();
 
-
   final _controllerName = TextEditingController();
   final _controllerPrice = TextEditingController();
   final _controllerDescription = TextEditingController();
@@ -47,6 +46,7 @@ class _AddPageState extends State<AddPage> {
   String _path;
 
   String docId;
+  double latitude, longitude;
 
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _cntlr;
@@ -63,10 +63,10 @@ class _AddPageState extends State<AddPage> {
         ),
       );
 
+      latitude = l.latitude;
+      longitude = l.longitude;
     });
   }
-
-
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -92,6 +92,9 @@ class _AddPageState extends State<AddPage> {
       'creationDate': FieldValue.serverTimestamp(),
       'updateDate': FieldValue.serverTimestamp(),
       'userId': FirebaseAuth.instance.currentUser.uid,
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': _address,
     }).then((value) async {
       product.collection('product').doc(value.id).set({
         'docId': value.id,

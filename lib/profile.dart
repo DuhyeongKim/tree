@@ -92,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text(
                 FirebaseAuth.instance.currentUser.uid,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
