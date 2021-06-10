@@ -75,6 +75,7 @@ class _BoardPageState extends State<BoardPage> {
       backgroundColor: Colors.white,
       appBar: new AppBar(
         backgroundColor: Colors.transparent,
+
         elevation: 0.0,
         title: new Text(
           widget.title,

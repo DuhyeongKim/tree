@@ -11,7 +11,16 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+
+    return Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage('images/plant.png'),
+            )),
+
+      child: StreamBuilder<QuerySnapshot>(
+
       stream: messages.snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.data == null)
@@ -58,6 +67,6 @@ class Body extends StatelessWidget {
           }).toList(),
         );
       },
-    );
+    ));
   }
 }

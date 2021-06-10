@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import 'product.dart';
 import 'productView.dart';
@@ -22,11 +24,15 @@ class DetailProductPage extends StatefulWidget {
 
 class _DetailProductPageState extends State<DetailProductPage> {
   int _selectedIndex = 1;
+
+
   final formatCurrency = new NumberFormat.simpleCurrency(
     locale: "ko_KR",
     name: "",
     decimalDigits: 0,
   );
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,11 +183,40 @@ class DetailBoardPage extends StatefulWidget {
 
 class _DetailBoardPageState extends State<DetailBoardPage> {
   int _selectedIndex = 2;
+
+  LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
+
+  GoogleMapController _controller;
+  LocationData _currentPosition;
+  String _address,_dateTime;
+  GoogleMapController mapController;
+  Location _location = Location();
+
   final formatCurrency = new NumberFormat.simpleCurrency(
     locale: "ko_KR",
     name: "",
     decimalDigits: 0,
   );
+
+
+  void _onMapCreated(GoogleMapController _cntlr) {
+    _controller = _cntlr;
+    _location.onLocationChanged.listen((l) {
+      _controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
+        ),
+      );
+      final marker = Marker(
+        position: LatLng(l.latitude, l.longitude),
+        infoWindow: InfoWindow(
+          title: '판매자 위치',
+        ),
+      );
+
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -340,6 +375,40 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
+
+                    SafeArea(
+                      child: Container(
+                        child: Center(
+                          child: Column(
+                            children: [Container(
+                              height:  MediaQuery.of(context).size.height/2.5,
+                              width: MediaQuery.of(context).size.width,
+                              child: GoogleMap(
+                                onMapCreated: _onMapCreated,
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(snapshot.data['latitude'], snapshot.data['longitude']),
+                                  zoom: 2,
+                                ),
+                              ),
+                            ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                  snapshot.data['address'],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                            ],
+                          ),
+                        ),),
+                    ),
+
                     SizedBox(height: 30.0),
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance

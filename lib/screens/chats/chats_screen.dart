@@ -74,6 +74,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   AppBar buildAppBar() {
     return AppBar(
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("images/forest.jpg"), fit: BoxFit.cover)),),
       automaticallyImplyLeading: false,
       title: Text("Chats"),
     );

@@ -17,7 +17,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+
+      backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white70,
@@ -68,23 +69,28 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 30.0),
           Container(
-            padding: EdgeInsets.fromLTRB(30.0, 30.0, 0.0, 20.0),
-            width: 300.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("images/forest.jpg"), fit: BoxFit.cover)),
+            width: 400,
+            height: 300,
+            padding: EdgeInsets.fromLTRB(30.0, 30.0, 0.0, 10.0),
             child: Text(
               "우리는 숲을 만드는\n회사입니다.",
               style: TextStyle(
                   fontSize: 30.0,
-                  color: Colors.green,
+                  color: Colors.white70,
                   fontWeight: FontWeight.bold),
               maxLines: 2,
             ),
           ),
-          SizedBox(height: 50.0),
+
           Expanded(
             child: ListView(
               children: [
