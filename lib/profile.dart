@@ -20,8 +20,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff090310),
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('images/groot.jpg'),
+          )),
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.green,
@@ -77,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: Column(
-        children: [
+        children: <Widget>[
           Padding(
             padding: EdgeInsets.all(20.0),
             child: Align(
@@ -143,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
           logoutButton(),
         ],
       ),
-    );
+    ),);
   }
 
   Widget logoutButton() {
