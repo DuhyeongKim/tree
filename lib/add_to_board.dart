@@ -223,27 +223,20 @@ class _AddPageState extends State<AddPage> {
               SizedBox(
                 height: 3,
               ),
-              if (_dateTime != null)
-                Text(
-                  "Date/Time: $_dateTime",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
+
               SizedBox(
                 height: 3,
               ),
               if (_address != null)
                 Text(
-                  "Address: $_address",
+                  "주소: $_address",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
                   ),
                 ),
               SizedBox(
-                height: 3,
+                height: 8,
               ),
     ],
           ),
@@ -330,6 +323,7 @@ class _AddPageState extends State<AddPage> {
               },
             ),
           ),
+          SizedBox(width: 8),
         ],
       ),
     );
