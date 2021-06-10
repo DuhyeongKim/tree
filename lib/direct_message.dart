@@ -128,7 +128,7 @@ class _DirectMessageState extends State<DirectMessage> {
                                       FirebaseAuth.instance.currentUser.uid
                                   ? Colors.green
                                   : Colors.yellow),
-                          padding: EdgeInsets.all(16),
+                          padding: EdgeInsets.all(15),
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.6,
                           ),
