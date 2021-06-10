@@ -107,10 +107,7 @@ class _DirectMessageState extends State<DirectMessage> {
               padding: const EdgeInsets.all(0.0),
               scrollDirection: Axis.vertical,
               children: [
-                ListView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(0.0),
-                  scrollDirection: Axis.vertical,
+                Column(
                   children: snapshot.data.docs.map((DocumentSnapshot document) {
                     return Align(
                       alignment: document.data()['userId'] ==
@@ -118,10 +115,32 @@ class _DirectMessageState extends State<DirectMessage> {
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          document.data()['content'],
-                          style: TextStyle(fontSize: 12.0),
+                        padding: EdgeInsets.only(
+                          left: 14,
+                          right: 14,
+                          top: 10,
+                          bottom: 10,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: document.data()['userId'] ==
+                                      FirebaseAuth.instance.currentUser.uid
+                                  ? Colors.green
+                                  : Colors.yellow),
+                          padding: EdgeInsets.all(16),
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.6,
+                          ),
+                          child: Text(
+                            document.data()['content'],
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                color: document.data()['userId'] ==
+                                        FirebaseAuth.instance.currentUser.uid
+                                    ? Colors.white
+                                    : Colors.black),
+                          ),
                         ),
                       ),
                     );
