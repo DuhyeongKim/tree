@@ -10,6 +10,7 @@ import 'product.dart';
 import 'productView.dart';
 import 'widgets.dart';
 import 'direct_message.dart';
+import 'edit.dart';
 
 Future<String> downloadURL(String filePath) async {
   return await firebase_storage.FirebaseStorage.instance
@@ -25,14 +26,11 @@ class DetailProductPage extends StatefulWidget {
 class _DetailProductPageState extends State<DetailProductPage> {
   int _selectedIndex = 1;
 
-
   final formatCurrency = new NumberFormat.simpleCurrency(
     locale: "ko_KR",
     name: "",
     decimalDigits: 0,
   );
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -184,11 +182,7 @@ class DetailBoardPage extends StatefulWidget {
 class _DetailBoardPageState extends State<DetailBoardPage> {
   int _selectedIndex = 2;
 
-  LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
-
   GoogleMapController _controller;
-  LocationData _currentPosition;
-  String _address,_dateTime;
   GoogleMapController mapController;
   Location _location = Location();
 
@@ -198,7 +192,6 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
     decimalDigits: 0,
   );
 
-
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _cntlr;
     _location.onLocationChanged.listen((l) {
@@ -207,16 +200,14 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
           CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
         ),
       );
-      final marker = Marker(
-        position: LatLng(l.latitude, l.longitude),
-        infoWindow: InfoWindow(
-          title: '판매자 위치',
-        ),
-      );
-
+      // final marker = Marker(
+      //   position: LatLng(l.latitude, l.longitude),
+      //   infoWindow: InfoWindow(
+      //     title: '판매자 위치',
+      //   ),
+      // );
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -245,300 +236,366 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
       return future;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white70,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white70,
-        selectedItemColor: Colors.indigoAccent,
-        unselectedItemColor: Colors.grey,
-        currentIndex: _selectedIndex,
-        onTap: (int index) {
-          setState(() {
-            switch (index) {
-              case 0:
-                Navigator.pushNamed(context, '/home');
-                break;
-              case 1:
-                Navigator.pushNamed(context, '/product');
-                break;
-              case 2:
-                Navigator.pushNamed(context, '/board');
-                break;
-              case 3:
-                Navigator.pushNamed(context, '/chat');
-                break;
-              case 4:
-                Navigator.pushNamed(context, '/profile');
-                break;
-            }
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: '홈',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: '상품',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: '중고거래',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message_outlined),
-            label: '채팅',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '내 정보',
-          ),
-        ],
-      ),
-      body: FutureBuilder(
+    return FutureBuilder(
         future: p.get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.data == null) return CircularProgressIndicator();
-          return ListView(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: FutureBuilder<String>(
-                  future: downloadURL(snapshot.data['filePath']),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String> element) {
-                    switch (element.connectionState) {
-                      case ConnectionState.none:
-                      case ConnectionState.active:
-                      case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
-                      case ConnectionState.done:
-                        return AspectRatio(
-                          aspectRatio: 20 / 11,
-                          child: Image.network(
-                            element.data.toString(),
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: 30.0),
-              Padding(
-                padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                child: Column(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        snapshot.data['이름'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25.0,
+          if (snapshot.data == null)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white70,
+              actions: [
+                if (snapshot.data['userId'] ==
+                    FirebaseAuth.instance.currentUser.uid)
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          semanticLabel: 'edit',
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        formatCurrency.format(snapshot.data['가격']) + "원",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        snapshot.data['주의사항'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        snapshot.data['description'],
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-
-                    SafeArea(
-                      child: Container(
-                        child: Center(
-                          child: Column(
-                            children: [Container(
-                              height:  MediaQuery.of(context).size.height/2.5,
-                              width: MediaQuery.of(context).size.width,
-                              child: GoogleMap(
-                                onMapCreated: _onMapCreated,
-                                initialCameraPosition: CameraPosition(
-                                  target: LatLng(snapshot.data['latitude'], snapshot.data['longitude']),
-                                  zoom: 2,
-                                ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditScreen(
+                                downloadImageURL:
+                                    downloadURL(snapshot.data['filePath']),
                               ),
+                              settings: RouteSettings(arguments: p),
                             ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                  snapshot.data['address'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                            ],
-                          ),
-                        ),),
-                    ),
-
-                    SizedBox(height: 30.0),
-                    StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('question')
-                          .where("productId", isEqualTo: docId)
-                          .orderBy('updateDate', descending: true)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.data == null)
-                          return Center(child: CircularProgressIndicator());
-                        return Container(
-                          height: 200.0,
-                          child: ListView(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(0.0),
-                            scrollDirection: Axis.vertical,
-                            primary: true,
-                            children: snapshot.data.docs
-                                .map((DocumentSnapshot document) {
-                              return Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 5,
-                                        child: Paragraph(
-                                            '${document.data()['userId']}: ${document.data()['content']}'),
-                                      ),
-                                      if (document.data()['userId'] ==
-                                          FirebaseAuth.instance.currentUser.uid)
-                                        Expanded(
-                                          child: IconButton(
-                                              icon: Icon(Icons.delete_outline),
-                                              onPressed: () async {
-                                                await FirebaseFirestore.instance
-                                                    .collection('question')
-                                                    .doc(document
-                                                        .data()['docId'])
-                                                    .delete();
-                                              }),
-                                        )
-                                      else
-                                        Expanded(
-                                          child: SizedBox(),
-                                        ),
-                                    ],
-                                  ),
-                                  ParagraphDate(document.data()['updateDate'] !=
-                                          null
-                                      ? document.data()['updateDate'].toDate()
-                                      : null),
-                                  SizedBox(height: 8),
-                                ],
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          semanticLabel: 'delete',
+                        ),
+                        onPressed: () async {
+                          await p.delete();
+                        },
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white70,
+              selectedItemColor: Colors.indigoAccent,
+              unselectedItemColor: Colors.grey,
+              currentIndex: _selectedIndex,
+              onTap: (int index) {
+                setState(() {
+                  switch (index) {
+                    case 0:
+                      Navigator.pushNamed(context, '/home');
+                      break;
+                    case 1:
+                      Navigator.pushNamed(context, '/product');
+                      break;
+                    case 2:
+                      Navigator.pushNamed(context, '/board');
+                      break;
+                    case 3:
+                      Navigator.pushNamed(context, '/chat');
+                      break;
+                    case 4:
+                      Navigator.pushNamed(context, '/profile');
+                      break;
+                  }
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  label: '홈',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.grid_view),
+                  label: '상품',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart_outlined),
+                  label: '중고거래',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.message_outlined),
+                  label: '채팅',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: '내 정보',
+                ),
+              ],
+            ),
+            body: FutureBuilder(
+              future: p.get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.data == null)
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                return ListView(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: FutureBuilder<String>(
+                        future: downloadURL(snapshot.data['filePath']),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> element) {
+                          switch (element.connectionState) {
+                            case ConnectionState.none:
+                            case ConnectionState.active:
+                            case ConnectionState.waiting:
+                              return Center(
+                                child: CircularProgressIndicator(),
                               );
-                            }).toList(),
-                          ),
-                        );
-                      },
+                            case ConnectionState.done:
+                              return AspectRatio(
+                                aspectRatio: 20 / 11,
+                                child: Image.network(
+                                  element.data.toString(),
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                     SizedBox(height: 30.0),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _controller,
-                                decoration: const InputDecoration(
-                                  hintText: 'Leave a message',
+                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                      child: Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              snapshot.data['이름'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              formatCurrency.format(snapshot.data['가격']) + "원",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              snapshot.data['주의사항'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 15.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              snapshot.data['description'],
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          SizedBox(height: 15.0),
+                          SafeArea(
+                            child: Container(
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2.5,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: GoogleMap(
+                                        onMapCreated: _onMapCreated,
+                                        initialCameraPosition: CameraPosition(
+                                          target: LatLng(
+                                              snapshot.data['latitude'],
+                                              snapshot.data['longitude']),
+                                          zoom: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Text(
+                                      snapshot.data['address'],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                  ],
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Enter your message to continue';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
-                            SizedBox(width: 8),
-                            StyledButton(
-                              onPressed: () async {
-                                if (_formKey.currentState.validate()) {
-                                  await addQuestion(_controller.text);
-                                  _controller.clear();
-                                }
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(Icons.send),
-                                  SizedBox(width: 4),
-                                  Text('SEND'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 50),
-                    FutureBuilder<DocumentSnapshot>(
-                        future: p.get(),
-                        builder: (context, snapshot) {
-                          return FloatingActionButton.extended(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DirectMessage(),
-                                  settings: RouteSettings(
-                                    arguments: snapshot.data['userId'] +
-                                        "_" +
-                                        FirebaseAuth.instance.currentUser.uid,
-                                  ),
+                          ),
+                          SizedBox(height: 30.0),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('question')
+                                .where("productId", isEqualTo: docId)
+                                .orderBy('updateDate', descending: true)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.data == null)
+                                return SizedBox(
+                                  height: 10,
+                                  width: 10,
+                                  child: CircularProgressIndicator(),
+                                );
+                              return Container(
+                                height: 200.0,
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.all(0.0),
+                                  scrollDirection: Axis.vertical,
+                                  primary: true,
+                                  children: snapshot.data.docs
+                                      .map((DocumentSnapshot document) {
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: Paragraph(
+                                                  '${document.data()['userId']}: ${document.data()['content']}'),
+                                            ),
+                                            if (document.data()['userId'] ==
+                                                FirebaseAuth
+                                                    .instance.currentUser.uid)
+                                              Expanded(
+                                                child: IconButton(
+                                                    icon: Icon(
+                                                        Icons.delete_outline),
+                                                    onPressed: () async {
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'question')
+                                                          .doc(document
+                                                              .data()['docId'])
+                                                          .delete();
+                                                    }),
+                                              )
+                                            else
+                                              Expanded(
+                                                child: SizedBox(),
+                                              ),
+                                          ],
+                                        ),
+                                        ParagraphDate(
+                                            document.data()['updateDate'] !=
+                                                    null
+                                                ? document
+                                                    .data()['updateDate']
+                                                    .toDate()
+                                                : null),
+                                        SizedBox(height: 8),
+                                      ],
+                                    );
+                                  }).toList(),
                                 ),
                               );
                             },
-                            label: Text('DM'),
-                          );
-                        }),
-                    SizedBox(height: 50),
+                          ),
+                          SizedBox(height: 30.0),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Form(
+                              key: _formKey,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _controller,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Leave a message',
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter your message to continue';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  StyledButton(
+                                    onPressed: () async {
+                                      if (_formKey.currentState.validate()) {
+                                        await addQuestion(_controller.text);
+                                        _controller.clear();
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.send),
+                                        SizedBox(width: 4),
+                                        Text('SEND'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 50),
+                          FutureBuilder<DocumentSnapshot>(
+                              future: p.get(),
+                              builder: (context, snapshot) {
+                                return FloatingActionButton.extended(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DirectMessage(),
+                                        settings: RouteSettings(
+                                          arguments: snapshot.data['userId'] +
+                                              "_" +
+                                              FirebaseAuth
+                                                  .instance.currentUser.uid,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  label: Text('DM'),
+                                );
+                              }),
+                          SizedBox(height: 50),
+                        ],
+                      ),
+                    ),
                   ],
-                ),
-              ),
-            ],
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
+        });
   }
 }
