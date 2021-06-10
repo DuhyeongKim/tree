@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               "우리는 숲을 만드는\n회사입니다.",
               style: TextStyle(
                   fontSize: 30.0,
-                  color: Colors.white70,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold),
               maxLines: 2,
             ),

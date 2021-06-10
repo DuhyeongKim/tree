@@ -128,19 +128,15 @@ class _EditScreenState extends State<EditScreen> {
     getData(product.id);
     if (_controllerName.text.length == 0) {
       if (sw1 == 0) _controllerName.text = name;
-      else sw1 = 1;
     }
     if (_controllerPrice.text.length == 0) {
       if (sw2 == 0) _controllerPrice.text = price;
-      else sw2 = 1;
     }
     if (_controllerPrecaution.text.length == 0) {
       if (sw3 == 0) _controllerPrecaution.text = precaution;
-      else sw3 = 1;
     }
     if (_controllerDescription.text.length == 0) {
       if (sw4 == 0) _controllerDescription.text = description;
-      else sw4 = 1;
     }
 
     return FutureBuilder(
@@ -304,6 +300,7 @@ class _EditScreenState extends State<EditScreen> {
                       if (hasFocus) {
                         _controllerName.selection = TextSelection.fromPosition(
                             TextPosition(offset: _controllerName.text.length));
+                        sw1 = 1;
                       }
                     },
                   ),
@@ -334,6 +331,7 @@ class _EditScreenState extends State<EditScreen> {
                       if (hasFocus) {
                         _controllerPrice.selection = TextSelection.fromPosition(
                             TextPosition(offset: _controllerPrice.text.length));
+                        sw2 = 1;
                       }
                     },
                   ),
@@ -370,6 +368,7 @@ class _EditScreenState extends State<EditScreen> {
                         _controllerPrecaution.selection =
                             TextSelection.fromPosition(TextPosition(
                                 offset: _controllerPrecaution.text.length));
+                        sw3 = 1;
                       }
                     },
                   ),
@@ -406,6 +405,7 @@ class _EditScreenState extends State<EditScreen> {
                         _controllerDescription.selection =
                             TextSelection.fromPosition(TextPosition(
                                 offset: _controllerDescription.text.length));
+                        sw4 = 1;
                       }
                     },
                   ),
