@@ -420,6 +420,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smart_bubble:
+    dependency: "direct main"
+    description:
+      name: smart_bubble
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   source_span:
     dependency: transitive
     description:

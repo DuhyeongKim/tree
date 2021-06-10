@@ -18,6 +18,17 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 4;
 
+  Future<bool> docExist() async {
+    FirebaseFirestore cart = FirebaseFirestore.instance;
+
+    var a = await cart
+        .collection('addToCart')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get();
+
+    return a.exists;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -98,52 +109,70 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('addToCart')
-                .doc(FirebaseAuth.instance.currentUser.uid)
-                .snapshots(),
+          FutureBuilder(
+            future: docExist(),
             builder: (context, snapshot) {
-              List<dynamic> ids = snapshot.data['saved'];
-              List<Product> products =
-                  ProductsRepository.loadProducts(Category.all);
+              if (snapshot.hasData) {
+                if (snapshot.data) {
+                  return StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('addToCart')
+                        .doc(FirebaseAuth.instance.currentUser.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        List<dynamic> ids = snapshot.data['saved'];
+                        List<Product> products =
+                            ProductsRepository.loadProducts(Category.all);
 
-              return Container(
-                height: 600.0,
-                child: ListView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(0.0),
-                  scrollDirection: Axis.vertical,
-                  children: ids
-                      .map(
-                        (e) => Container(
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: OutlinedButton(
-                              child: Padding(
-                                padding: EdgeInsets.all(15.0),
-                                child: Text(
-                                  products[e].name,
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                        return Container(
+                          height: 600.0,
+                          child: ListView(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(0.0),
+                            scrollDirection: Axis.vertical,
+                            children: ids
+                                .map(
+                                  (e) => Container(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: OutlinedButton(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(15.0),
+                                          child: Text(
+                                            products[e].name,
+                                            style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        style: OutlinedButton.styleFrom(
+                                          primary: Colors.white,
+                                          backgroundColor: Colors.teal,
+                                          side: BorderSide(
+                                              color: Colors.red, width: 5),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.teal,
-                                side: BorderSide(color: Colors.red, width: 5),
-                              ),
-                            ),
+                                )
+                                .toList(),
                           ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              );
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  return Container(height: 600);
+                }
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
             },
           ),
           logoutButton(),

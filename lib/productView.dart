@@ -12,25 +12,43 @@ Future<bool> addToCart(int id) async {
   List<dynamic> saved = [];
   int alreadySaved = 0;
 
-  await cart
+  var a = await cart
       .collection('addToCart')
       .doc(FirebaseAuth.instance.currentUser.uid)
-      .get()
-      .then((DocumentSnapshot ds) {
-    if (ds.data()['saved'].contains(id)) {
-      alreadySaved = 1;
-    }
-  });
-  saved.add(id);
+      .get();
 
-  cart
-      .collection('addToCart')
-      .doc(FirebaseAuth.instance.currentUser.uid)
-      .update({
-    'saved': FieldValue.arrayUnion(saved),
-  });
+  if (a.exists) {
+    await cart
+        .collection('addToCart')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot ds) {
+      if (ds.data()['saved'].contains(id)) {
+        alreadySaved = 1;
+      }
+    });
+    saved.add(id);
 
-  return alreadySaved == 0 ? false : true;
+    cart
+        .collection('addToCart')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .update({
+      'saved': FieldValue.arrayUnion(saved),
+    });
+
+    return alreadySaved == 0 ? false : true;
+  } else {
+    saved.add(id);
+
+    cart
+        .collection('addToCart')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .set({
+      'saved': FieldValue.arrayUnion(saved),
+    });
+
+    return false;
+  }
 }
 
 class ProductPage extends StatefulWidget {
