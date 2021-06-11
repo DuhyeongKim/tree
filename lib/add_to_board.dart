@@ -4,9 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:treeplanet/board.dart';
@@ -32,7 +30,7 @@ class _AddPageState extends State<AddPage> {
   LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
   GoogleMapController _controller;
   LocationData _currentPosition;
-  String _address,_dateTime;
+  String _address;
   GoogleMapController mapController;
   Location _location = Location();
 
@@ -56,12 +54,12 @@ class _AddPageState extends State<AddPage> {
           CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
         ),
       );
-      final marker = Marker(
-        position: LatLng(l.latitude, l.longitude),
-        infoWindow: InfoWindow(
-          title: '판매자 위치',
-        ),
-      );
+      // final marker = Marker(
+      //   position: LatLng(l.latitude, l.longitude),
+      //   infoWindow: InfoWindow(
+      //     title: '판매자 위치',
+      //   ),
+      // );
 
       latitude = l.latitude;
       longitude = l.longitude;
@@ -107,13 +105,11 @@ class _AddPageState extends State<AddPage> {
     return future;
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getLoc();
-
   }
 
   @override
@@ -262,7 +258,6 @@ class _AddPageState extends State<AddPage> {
               },
             ),
           ),
-          SizedBox(width: 8),
           Container(
             margin: EdgeInsets.only(left: 50, right: 50),
             child: TextFormField(
@@ -281,7 +276,6 @@ class _AddPageState extends State<AddPage> {
               },
             ),
           ),
-          SizedBox(width: 8),
           Container(
             margin: EdgeInsets.only(left: 50, right: 50),
             child: TextFormField(
@@ -300,7 +294,6 @@ class _AddPageState extends State<AddPage> {
               },
             ),
           ),
-          SizedBox(width: 8),
           Container(
             margin: EdgeInsets.only(left: 50, right: 50),
             child: TextFormField(
@@ -323,11 +316,12 @@ class _AddPageState extends State<AddPage> {
               },
             ),
           ),
-          SizedBox(width: 8),
+          SizedBox(height: 8),
         ],
       ),
     );
   }
+
   getLoc() async{
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -356,8 +350,8 @@ class _AddPageState extends State<AddPage> {
         _currentPosition = currentLocation;
         _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
 
-        DateTime now = DateTime.now();
-        _dateTime = DateFormat('EEE d MMM kk:mm:ss ').format(now);
+        // DateTime now = DateTime.now();
+        // _dateTime = DateFormat('EEE d MMM kk:mm:ss ').format(now);
         getPlaceAddress(_currentPosition.latitude, _currentPosition.longitude)
             .then((value) {
           setState(() {
@@ -371,6 +365,5 @@ class _AddPageState extends State<AddPage> {
     final coordinates = new Coordinates(lat, lng);
     List<Address> add = await Geocoder.local.findAddressesFromCoordinates(coordinates);
     return add;
-
   }
 }

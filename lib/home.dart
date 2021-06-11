@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -78,14 +77,14 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("images/forest.jpg"), fit: BoxFit.cover)),
-            width: 400,
+            width: 420,
             height: 300,
             padding: EdgeInsets.fromLTRB(30.0, 30.0, 0.0, 10.0),
             child: Text(
               "우리는 숲을 만드는\n회사입니다.",
               style: TextStyle(
                   fontSize: 30.0,
-                  color: Colors.white70,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold),
               maxLines: 2,
             ),
