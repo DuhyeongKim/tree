@@ -97,6 +97,10 @@ flutter:
     - images/groot.jpg
     - images/plant.png
     - images/groom.jpg
+    - images/a.jpg
+    - images/post.jpg
+    - images/pastel.jpg
+    - images/yaja.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

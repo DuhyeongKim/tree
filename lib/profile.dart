@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/plant.png'),
+            image: AssetImage('images/post.jpg'),
             fit: BoxFit.cover
           )),
 
@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
-                                            image: AssetImage('images/groom.jpg'),
+                                            image: AssetImage('images/yaja.jpg'),
                                             fit: BoxFit.cover
                                         )),
                                     alignment: Alignment.center,
@@ -169,16 +169,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                         Padding(
                                           padding: EdgeInsets.all(10.0),
                                             child: Padding(
-                                              padding: EdgeInsets.all(5.0),
+                                              padding: EdgeInsets.all(10.0),
                                           child: Text(
                                             products[e].name,
                                             style: TextStyle(
                                               fontSize: 20.0,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color: Colors.black,
                                             ),
                                           ),
                                         ),
+
 
                                   ),
 
@@ -195,50 +196,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                              style: TextStyle(
                                                fontSize: 20.0,
                                                fontWeight: FontWeight.bold,
-                                               color: Colors.white,
+                                               color: Colors.black,
                                              ),
                                            ),
                                           SizedBox(width: 20.0,),
 
 
-                                           Container(
-                                               width: 20.0,
-                                               height: 20.0,
-                                               decoration: BoxDecoration(
-                                                 color: Colors.blue[300],
-                                                 borderRadius: BorderRadius.circular(4.0),),
-                                               child: Icon(
-                                                 Icons.add,
-                                                 color: Colors.white,
-                                                 size: 15.0,
-                                               )
-                                           ),
 
-                                           Padding(
-                                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                               child: Text(
-                                                 "1",
-                                                 style: TextStyle(
-                                                   fontSize: 18.0,
-                                                   fontWeight: FontWeight.bold,
-                                                   color: Colors.black,
-                                                 ),
-                                               ),
-                                           ),
-
-
-                                        Container(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius: BorderRadius.circular(4.0),),
-                                          child: Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                            size: 15.0,
-                                          )
-                                        ),
 
 
                                        ]),

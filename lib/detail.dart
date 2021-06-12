@@ -181,7 +181,7 @@ class DetailBoardPage extends StatefulWidget {
 
 class _DetailBoardPageState extends State<DetailBoardPage> {
   int _selectedIndex = 2;
-
+  List<Marker> customMarkers = [];
   GoogleMapController _controller;
   GoogleMapController mapController;
   Location _location = Location();
@@ -415,6 +415,7 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                             ),
                           ),
                           SizedBox(height: 15.0),
+
                           SafeArea(
                             child: Container(
                               child: Center(
@@ -426,15 +427,15 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                                               2.5,
                                       width: MediaQuery.of(context).size.width,
                                       child: GoogleMap(
-                                        onMapCreated: _onMapCreated,
                                         initialCameraPosition: CameraPosition(
-                                          target: LatLng(
-                                              snapshot.data['latitude'],
-                                              snapshot.data['longitude']),
-                                          zoom: 2,
+                                          target: LatLng(36.09188893891537, 129.3835571480815),
+                                            //(snapshot.data['latitude'], snapshot.data['longitude']),
+                                          zoom: 15),
+
+                                        //markers: ,
+                                        //onMapCreated: mapCreated,
                                         ),
                                       ),
-                                    ),
                                     SizedBox(
                                       height: 3,
                                     ),
