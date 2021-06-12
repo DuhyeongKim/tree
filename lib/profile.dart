@@ -144,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         List<Product> products =
                             ProductsRepository.loadProducts(Category.all);
 
-                        return Container(
+                        return Expanded(
 
                           child: ListView(
 
@@ -174,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             style: TextStyle(
                                               fontSize: 20.0,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color: Colors.black,
                                             ),
                                           ),
                                         ),
@@ -200,44 +200,44 @@ class _ProfilePageState extends State<ProfilePage> {
                                           SizedBox(width: 20.0,),
 
 
-                                           Container(
-                                               width: 20.0,
-                                               height: 20.0,
-                                               decoration: BoxDecoration(
-                                                 color: Colors.blue[300],
-                                                 borderRadius: BorderRadius.circular(4.0),),
-                                               child: Icon(
-                                                 Icons.add,
-                                                 color: Colors.white,
-                                                 size: 15.0,
-                                               )
-                                           ),
-
-                                           Padding(
-                                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                               child: Text(
-                                                 "1",
-                                                 style: TextStyle(
-                                                   fontSize: 18.0,
-                                                   fontWeight: FontWeight.bold,
-                                                   color: Colors.black,
-                                                 ),
-                                               ),
-                                           ),
-
-
-                                        Container(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius: BorderRadius.circular(4.0),),
-                                          child: Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                            size: 15.0,
-                                          )
-                                        ),
+                                        //    Container(
+                                        //        width: 20.0,
+                                        //        height: 20.0,
+                                        //        decoration: BoxDecoration(
+                                        //          color: Colors.blue[300],
+                                        //          borderRadius: BorderRadius.circular(4.0),),
+                                        //        child: Icon(
+                                        //          Icons.add,
+                                        //          color: Colors.white,
+                                        //          size: 15.0,
+                                        //        )
+                                        //    ),
+                                        //
+                                        //    Padding(
+                                        //      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        //        child: Text(
+                                        //          "1",
+                                        //          style: TextStyle(
+                                        //            fontSize: 18.0,
+                                        //            fontWeight: FontWeight.bold,
+                                        //            color: Colors.black,
+                                        //          ),
+                                        //        ),
+                                        //    ),
+                                        //
+                                        //
+                                        // Container(
+                                        //   width: 20.0,
+                                        //   height: 20.0,
+                                        //   decoration: BoxDecoration(
+                                        //     color: Colors.grey[300],
+                                        //     borderRadius: BorderRadius.circular(4.0),),
+                                        //   child: Icon(
+                                        //     Icons.remove,
+                                        //     color: Colors.white,
+                                        //     size: 15.0,
+                                        //   )
+                                        // ),
 
 
                                        ]),
