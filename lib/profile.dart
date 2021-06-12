@@ -246,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     MaterialPageRoute(builder: (context) => MainCard()),
                   );
                 },
-                elevation: 0.5,
+                elevation: 0.6,
                 color: Colors.cyan,
                 child: Center(
                   child: Text(
