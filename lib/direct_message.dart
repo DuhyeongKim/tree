@@ -27,12 +27,13 @@ class _DirectMessageState extends State<DirectMessage> {
 
       dm.set({
         'sellerId': docId.split("_")[0],
-        'purchaserId': FirebaseAuth.instance.currentUser.uid,
+        'purchaserId': docId.split("_")[1],
       });
 
       final future = dm.collection('chats').add({
         'creationDate': FieldValue.serverTimestamp(),
         'userId': FirebaseAuth.instance.currentUser.uid,
+        'email': FirebaseAuth.instance.currentUser.email,
         'content': content,
       }).then((value) async {
         dm.collection('chats').doc(value.id).set({

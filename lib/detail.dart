@@ -223,6 +223,7 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
         'creationDate': FieldValue.serverTimestamp(),
         'updateDate': FieldValue.serverTimestamp(),
         'userId': FirebaseAuth.instance.currentUser.uid,
+        'email': FirebaseAuth.instance.currentUser.email,
         'productId': docId,
         'content': content,
       }).then((value) async {
@@ -485,7 +486,7 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                                             Expanded(
                                               flex: 5,
                                               child: Paragraph(
-                                                  '${document.data()['userId']}: ${document.data()['content']}'),
+                                                  '${document.data()['email']}: ${document.data()['content']}'),
                                             ),
                                             if (document.data()['userId'] ==
                                                 FirebaseAuth
@@ -577,10 +578,10 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                                       MaterialPageRoute(
                                         builder: (context) => DirectMessage(),
                                         settings: RouteSettings(
-                                          arguments: snapshot.data['userId'] +
+                                          arguments: snapshot.data['email'] +
                                               "_" +
                                               FirebaseAuth
-                                                  .instance.currentUser.uid,
+                                                  .instance.currentUser.email,
                                         ),
                                       ),
                                     );

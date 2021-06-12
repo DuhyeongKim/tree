@@ -7,17 +7,17 @@ import 'package:treeplanet/direct_message.dart';
 class Body extends StatelessWidget {
   Query messages = FirebaseFirestore.instance
       .collection('chatRoom')
-      .where('sellerId', isEqualTo: FirebaseAuth.instance.currentUser.uid);
+      .where('sellerId', isEqualTo: FirebaseAuth.instance.currentUser.email);
 
   @override
   Widget build(BuildContext context) {
 
     return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('images/plant.png'),
-            )),
+        // decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //       fit: BoxFit.cover,
+        //       image: AssetImage('images/plant.png'),
+        //     )),
 
       child: StreamBuilder<QuerySnapshot>(
 
@@ -34,6 +34,7 @@ class Body extends StatelessWidget {
             return Padding(
               padding: EdgeInsets.all(10.0),
               child: Container(
+                color: Colors.white,
                 alignment: Alignment.center,
                 child: OutlinedButton(
                   style: ButtonStyle(
@@ -44,7 +45,7 @@ class Body extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(25.0),
                     child: Text(
                       document.data()['purchaserId'],
                       style: TextStyle(fontSize: 18.0),

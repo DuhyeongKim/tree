@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                FirebaseAuth.instance.currentUser.uid,
+                FirebaseAuth.instance.currentUser.email,
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -144,10 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         List<Product> products =
                             ProductsRepository.loadProducts(Category.all);
 
-                        return Container(
+                        return Expanded(
 
                           child: ListView(
-
 
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(0.0),
@@ -159,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
-                                            image: AssetImage('images/yaja.jpg'),
+                                            image: AssetImage('images/groom.jpg'),
                                             fit: BoxFit.cover
                                         )),
                                     alignment: Alignment.center,
@@ -179,7 +178,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ),
                                           ),
                                         ),
-
 
                                   ),
 
