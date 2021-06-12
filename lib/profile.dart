@@ -158,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
-                                            image: AssetImage('images/groom.jpg'),
+                                            image: AssetImage('images/yaja.jpg'),
                                             fit: BoxFit.cover
                                         )),
                                     alignment: Alignment.center,
