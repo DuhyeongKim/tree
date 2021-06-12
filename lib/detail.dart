@@ -181,6 +181,7 @@ class DetailBoardPage extends StatefulWidget {
 
 class _DetailBoardPageState extends State<DetailBoardPage> {
   int _selectedIndex = 2;
+  List<Marker> allMarkers = [];
   List<Marker> customMarkers = [];
   GoogleMapController _controller;
   GoogleMapController mapController;
@@ -241,10 +242,15 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
         future: p.get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
           if (snapshot.data == null)
             return Center(
               child: CircularProgressIndicator(),
             );
+          allMarkers.add(Marker(
+            markerId: MarkerId('seller position'),
+            draggable: true,
+            position: LatLng(snapshot.data['latitude'], snapshot.data['longitude'])));
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white70,
@@ -429,11 +435,11 @@ class _DetailBoardPageState extends State<DetailBoardPage> {
                                       width: MediaQuery.of(context).size.width,
                                       child: GoogleMap(
                                         initialCameraPosition: CameraPosition(
-                                          target: LatLng(36.09188893891537, 129.3835571480815),
-                                            //(snapshot.data['latitude'], snapshot.data['longitude']),
+                                          target: LatLng(snapshot.data['latitude'], snapshot.data['longitude']),
+
                                           zoom: 15),
 
-                                        //markers: ,
+                                        markers: Set.from(allMarkers),
                                         //onMapCreated: mapCreated,
                                         ),
                                       ),
