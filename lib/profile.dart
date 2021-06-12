@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                FirebaseAuth.instance.currentUser.uid,
+                FirebaseAuth.instance.currentUser.email,
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -147,7 +147,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         return Container(
 
                           child: ListView(
-
 
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(0.0),

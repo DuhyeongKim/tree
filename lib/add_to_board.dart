@@ -90,6 +90,7 @@ class _AddPageState extends State<AddPage> {
       'creationDate': FieldValue.serverTimestamp(),
       'updateDate': FieldValue.serverTimestamp(),
       'userId': FirebaseAuth.instance.currentUser.uid,
+      'email': FirebaseAuth.instance.currentUser.email,
       'latitude': latitude,
       'longitude': longitude,
       'address': _address,

@@ -7,7 +7,7 @@ import 'package:treeplanet/direct_message.dart';
 class Body extends StatelessWidget {
   Query messages = FirebaseFirestore.instance
       .collection('chatRoom')
-      .where('sellerId', isEqualTo: FirebaseAuth.instance.currentUser.uid);
+      .where('sellerId', isEqualTo: FirebaseAuth.instance.currentUser.email);
 
   @override
   Widget build(BuildContext context) {
