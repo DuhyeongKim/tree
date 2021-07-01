@@ -169,7 +169,7 @@ class _BoardPageState extends State<BoardPage> {
                         children:
                             snapshot.data.docs.map((DocumentSnapshot document) {
                           return FutureBuilder(
-                            future: downloadURL(document.data()['filePat']),
+                            future: downloadURL(document.data()['filePa']),
                             builder: (BuildContext context,
                                 AsyncSnapshot<String> s) {
                               switch (s.connectionState) {
