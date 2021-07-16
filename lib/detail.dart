@@ -168,7 +168,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               ],
             ),
           ),
-        ],
+        ],addQuestion
       ),
     );
   }

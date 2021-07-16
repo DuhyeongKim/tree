@@ -217,7 +217,7 @@ class _BoardPageState extends State<BoardPage> {
                   ),
                 ),
                 new Transform.translate(
-                  offset: Offset(0.0, -56.0),
+                  offset: Offset(0.0, -56.1),
                   child: new Container(
                     child: new ClipPath(
                       clipper: new MyClipper(),
